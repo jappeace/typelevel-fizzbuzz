@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 736bcd6c50a3ee6037742ab1bf25dac0c94d671d59d43396aaed2b7c41e03403
+-- hash: b244f42134988477da1315af5fccd3e7bbf76684f69614371990ad62c78ff404
 
 name:           template
 version:        1.0.0
@@ -84,41 +84,5 @@ executable exe
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , template
-  default-language: Haskell2010
-
-test-suite unit
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Test.TestSpec
-      Paths_template
-  hs-source-dirs:
-      test
-  default-extensions:
-      EmptyCase
-      FlexibleContexts
-      FlexibleInstances
-      InstanceSigs
-      MultiParamTypeClasses
-      LambdaCase
-      MultiWayIf
-      NamedFieldPuns
-      TupleSections
-      DeriveFoldable
-      DeriveFunctor
-      DeriveGeneric
-      DeriveLift
-      DeriveTraversable
-      DerivingStrategies
-      GeneralizedNewtypeDeriving
-      StandaloneDeriving
-      OverloadedStrings
-      TypeApplications
-  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  build-depends:
-      base >=4.7 && <5
-    , hspec
-    , hspec-core
     , template
   default-language: Haskell2010

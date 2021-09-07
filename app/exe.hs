@@ -10,6 +10,7 @@ module Main where
 import GHC.TypeLits
 import Data.Proxy
 import Data.Type.Equality
+import Processor ()
 
 type family ShowNat (x :: Nat) :: Symbol where
   ShowNat 0 = "0"

@@ -1,20 +1,15 @@
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE ScopedTypeVariables#-}
-{-# GHC_OPTIONS -Wno-redundant-constraints #-}
+{-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
+{-# OPTIONS_GHC -Wno-unticked-promoted-constructors #-}
 
 -- | Basic logic gates
 module LogicGates where
-
-import GHC.TypeLits
-import Data.Proxy
-import Data.Type.Equality
 
 data Axiom = Truth -- ^ when someone tells you the truth, like that.
             | Lies -- ^ when someone tells you the truth, but not.
@@ -36,6 +31,7 @@ instance Nand Truth Lies Truth
 type Not input = (Nand input input)
 
 -- shorthand for that other stuff no one cares about
+nil :: a
 nil = error "undefined"
 
 -- tests be like this

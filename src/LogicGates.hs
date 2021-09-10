@@ -7,6 +7,7 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE ScopedTypeVariables#-}
+{-# GHC_OPTIONS -Wno-redundant-constraints #-}
 
 -- | Basic logic gates
 module LogicGates where
@@ -18,20 +19,21 @@ import Data.Type.Equality
 data Axiom = Truth -- ^ when someone tells you the truth, like that.
             | Lies -- ^ when someone tells you the truth, but not.
 
-type F = Lies
+type F = Lies -- ^ truthn't
 type T = Truth
 
 -- our only function
 class Nand (in1 :: Axiom) (in2 :: Axiom) (out :: Axiom) | in1 in2 -> out
 
+-- TODO express nand based off relais instead of as an axiom
 -- a truth table
+instance Nand Lies Lies Truth
+instance Nand Lies Truth Truth
 instance Nand Truth Truth Lies
 instance Nand Truth Lies Truth
-instance Nand Lies Truth Truth
-instance Nand Lies Lies Truth
 
 -- all other functions will be aliases
-type Not input = (Nand Truth input)
+type Not input = (Nand input input)
 
 -- shorthand for that other stuff no one cares about
 nil = error "undefined"
@@ -39,7 +41,6 @@ nil = error "undefined"
 -- tests be like this
 notProof1 :: Not Truth Lies => b
 notProof1 = nil
-
 notProof2 :: Not Lies Truth => b
 notProof2 = nil
 
@@ -66,7 +67,6 @@ instance (
          , Nand ninput ninput2 out
          ) =>
   Or input input2 out
-
 
 orProof1 :: Or Truth Truth Truth => b
 orProof1 = nil

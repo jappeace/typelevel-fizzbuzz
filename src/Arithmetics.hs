@@ -109,7 +109,7 @@ _2bitAdderProof10 :: Adder2 '(F,T) '(F,F) T F '(T,F) => b
 _2bitAdderProof10 = nil
 
 class Adder4 (a :: (Axiom, Axiom, Axiom, Axiom)) (b :: (Axiom, Axiom, Axiom, Axiom)) (c :: Axiom)
-                   (cout :: Axiom) (s :: (Axiom, Axiom, Axiom, Axiom))
+                   (cout :: Axiom) (s :: (Axiom, Axiom, Axiom, Axiom)) | a b c -> cout s
 
 instance (
     Adder2 '(a1, a0) '(b1, b0) c midh '(s1, s0)
@@ -147,7 +147,7 @@ _4bitAdderProof16 = nil
 _4bitAdderProof17 :: Adder4 '(F , F , F , T)  '(F , F , F , T) T  F '(F, F, T, T) => b
 _4bitAdderProof17 = nil
 
-class Increment (a  :: (Axiom, Axiom, Axiom, Axiom)) (s  :: (Axiom, Axiom, Axiom, Axiom))
+class Increment (a  :: (Axiom, Axiom, Axiom, Axiom)) (s  :: (Axiom, Axiom, Axiom, Axiom)) | a -> s
 instance
   (Adder4 a '(F , F , F , F) T cout s) => Increment a s
 
@@ -163,6 +163,66 @@ incProof16 = nil
 incProofOverflow :: Increment '(T , T , T , T)  '(F , F , F , F) => b
 incProofOverflow = nil
 
+
+class Invert (a  :: (Axiom, Axiom, Axiom, Axiom)) (s  :: (Axiom, Axiom, Axiom, Axiom)) | a -> s
+instance (
+  Not a3 s3, Not a2 s2, Not a1 s1, Not a0 s0) => Invert '(a3, a2, a1, a0) '(s3, s2, s1, s0)
+
+
+invProof :: Invert '(F , F , F , F)  '(T , T , T , T) => b
+invProof = nil
+
+invProof2 :: Invert '(T , F , T , F)  '(F , T , F , T) => b
+invProof2 = nil
+
+class Subtract (a  :: (Axiom, Axiom, Axiom, Axiom)) (b  :: (Axiom, Axiom, Axiom, Axiom)) (s  :: (Axiom, Axiom, Axiom, Axiom)) | a b -> s
+instance (
+         Invert b bout
+         , Adder4 a bout F c sout
+         , Increment sout s
+         ) => Subtract a b s
+
+
+subtractProof0 :: Subtract '(F , F , F , F)  '(F , F , F , F) '(F , F , F , F) => b
+subtractProof0 = nil
+subtractProof1 :: Subtract '(F , F , F , T)  '(F , F , F , F) '(F , F , F , T) => b
+subtractProof1 = nil
+subtractProof2 :: Subtract '(F , F , F , T)  '(F , F , F , T) '(F , F , F , F) => b
+subtractProof2 = nil
+subtractProof15 :: Subtract '(F , F , F , T)  '(F , F , T , F) '(T , T , T , T) => b
+subtractProof15 = nil
+subtractProof14 :: Subtract '(F , F , F , T)  '(F , F , T , T) '(T , T , T , F) => b
+subtractProof14 = nil
+subtractProof22 :: Subtract '(F , F , T , F)  '(F , F , T , F) '(F , F , F , F) => b
+subtractProof22 = nil
+subtractProof30 :: Subtract '(T , F , F , F)  '(T , F , F , F) '(F , F , F , F) => b
+subtractProof30 = nil
+subtractProof40 :: Subtract '(T , F , F , F)  '(T , F , F , T) '(T , T , T , T) => b
+subtractProof40 = nil
+
+
+class IsZero (a  :: (Axiom, Axiom, Axiom, Axiom)) (s :: Axiom)
+
+instance (
+          Or a3 a2 o1
+         , Or a1 a0 o2
+         , Or o1 o2 o3
+         , Not o3 s
+         ) => IsZero '(a3, a2, a1, a0) s
+
+
+zeroProof :: IsZero '(F , F , F , F)  T => b
+zeroProof = nil
+zeroProof1 :: IsZero '(T , F , F , F)  F => b
+zeroProof1 = nil
+
+class IsNegative (a  :: (Axiom, Axiom, Axiom, Axiom)) (s :: Axiom)
+instance IsNegative '(a3, a2, a1, a0) a3
+
+negativeProof :: IsNegative '(T , F , F , F)  T => b
+negativeProof = nil
+negativeProof2 :: IsNegative '(F , F , F , F)  F => b
+negativeProof2 = nil
 
 x :: Int -- inhabitation means proved
 x = halfAdderProof1
@@ -206,3 +266,17 @@ x = halfAdderProof1
     incProofOverflow
     incProof2
     incProof16
+    invProof
+    invProof2
+    subtractProof0
+    subtractProof1
+    subtractProof2
+    subtractProof15
+    subtractProof14
+    subtractProof22
+    subtractProof30
+    subtractProof40
+    zeroProof1
+    zeroProof
+    negativeProof2
+    negativeProof

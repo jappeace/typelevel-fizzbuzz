@@ -28,7 +28,7 @@ instance Nand Lies Truth Truth
 instance Nand Lies Lies Truth
 
 -- all other functions will be aliases
-type Not input = (Nand input input)
+type Not input = (Nand Truth input)
 
 -- shorthand for that other stuff no one cares about
 nil = error "undefined"
@@ -56,8 +56,12 @@ andProof3 = nil
 andProof4 :: And Truth Lies Lies => b
 andProof4 = nil
 
-class Or input input2 out
-instance (And input input2 xin, Nand xin input2 out) =>
+class Or (input :: Axiom) (input2 :: Axiom) (out :: Axiom) | input input2 -> out
+instance (
+         Not input ninput
+         , Not input2 ninput2
+         , Nand ninput ninput2 out
+         ) =>
   Or input input2 out
 
 
@@ -70,6 +74,24 @@ orProof3 = nil
 orProof4 :: Or Truth Lies Truth => b
 orProof4 = nil
 
+-- when stuck I used nand game https://nandgame.com/#
+-- it's a bit easier as a diagram
+class Xor (input :: Axiom) (input2 :: Axiom) (out :: Axiom) | input input2 -> out
+instance ( Nand input input2 nout
+         , Or input input2 oout
+         , And oout nout out
+         ) =>
+  Xor input input2 out
+
+xorProof1 :: Xor Truth Truth Lies => b
+xorProof1 = nil
+xorProof2 :: Xor Lies Truth Truth => b
+xorProof2 = nil
+xorProof3 :: Xor Lies Lies Lies => b
+xorProof3 = nil
+xorProof4 :: Xor Truth Lies Truth => b
+xorProof4 = nil
+
 x :: Int -- inhabitation means proved
 x = notProof1 -- since the values are irrelevant, we jam all proofs here
     notProof2
@@ -81,3 +103,11 @@ x = notProof1 -- since the values are irrelevant, we jam all proofs here
     orProof2
     orProof3
     orProof4
+    xorProof1
+    xorProof1
+    xorProof2
+    xorProof2
+    xorProof3
+    xorProof3
+    xorProof4
+    xorProof4

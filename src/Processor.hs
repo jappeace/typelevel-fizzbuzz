@@ -8,8 +8,9 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE ScopedTypeVariables#-}
 
--- | a 4 bit processor at typelevel for executing fizzbuzz program
+-- | a 16 bit processor at typelevel for executing fizzbuzz program
 module Processor where
 
 import LogicGates ()
 import Arithmetics ()
+import Plumbing()

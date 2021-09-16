@@ -27,7 +27,6 @@ instance
   ) =>
   Selector  s d1 d0 out
 
-
 selectorProof1 :: Selector F F F F => b
 selectorProof1 = nil
 selectorProof2 :: Selector F T F F => b

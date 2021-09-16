@@ -14,3 +14,4 @@ module Processor where
 import LogicGates ()
 import Arithmetics ()
 import Plumbing()
+import Memory()

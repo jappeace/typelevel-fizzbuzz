@@ -42,10 +42,13 @@ latchStProof1 = nil
 latchStProof2 :: Latch '[ '( T, T)] '[T] => b
 latchStProof2 = nil
 
-latchSetTrueMem :: Latch '[ '( F, F), '( T, T)] '[T , F] => b
+latchSetTrueMem :: Latch '[ '( F, F), '( T, T)] '[T , T] => b
 latchSetTrueMem = nil
-latchSetTrueMem2 :: Latch '[ '( F, F), '( F, F), '( T, T)] '[T, T, F] => b
+latchSetTrueMem2 :: Latch '[ '( F, F), '( F, F), '( T, T)] '[T, T, T] => b
 latchSetTrueMem2 = nil
+
+latchSetTrueFalseMem :: Latch '[ '( F, T), '( T, F), '( F, F), '( T, T)] '[F, F, T , T] => b
+latchSetTrueFalseMem = nil
 
 x :: Int
 x =
@@ -53,3 +56,4 @@ x =
    latchStProof2
    latchSetTrueMem
    latchSetTrueMem2
+   latchSetTrueFalseMem

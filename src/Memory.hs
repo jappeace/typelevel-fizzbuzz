@@ -5,7 +5,7 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE ScopedTypeVariables#-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 {-# OPTIONS_GHC -Wno-unticked-promoted-constructors #-}
 
@@ -14,12 +14,28 @@ module Memory where
 import Plumbing
 import LogicGates
 
+class FirstOrFalse (input :: '[ Axiom ]) (out :: Axiom ) | input -> out
+instance FirstOrFalse '[] F
+instance FirstOrFalse '[x ': _rem] x
+
 -- | A latch component stores and outputs a single bit
 --
 -- When st (store) is 1, the value on d is stored and emitted.
 --
 -- When st is 0, the value of d is ignored, and the previously stored value is still emitted.
-class Latch st d out
+--
+-- we use a list of axioms to indicate the passage of time, where every item is a tick
+-- first item is processed last. in [a,b,c], c will be processed firt, then b, then a
+class Latch (input :: '[ '( Axiom, Axiom ) ] ) (out :: '[ Axiom ]) | input -> out
+
+instance Latch '[] '[]
+instance Latch
+  (
+    FirstOrFalse prevOut prevMem
+  , Latch rem prevOut
+  , Selector st d prevMem out
+  )
+  '[ '(st, d) ': rem ]  '[ out ': prevOut]
 
 instance (
           Selector st d out out

@@ -35,8 +35,6 @@ instance (
         , Selector st d prevMem out
         ) => Latch ('(st, d) ': rem )  (out ': prevOut)
 
-
-
 latchStProof1 :: Latch '[ '( T, F)] '[F] => b
 latchStProof1 = nil
 latchStProof2 :: Latch '[ '( T, T)] '[T] => b
@@ -49,6 +47,25 @@ latchSetTrueMem2 = nil
 
 latchSetTrueFalseMem :: Latch '[ '( F, T), '( T, F), '( F, F), '( T, T)] '[F, F, T , T] => b
 latchSetTrueFalseMem = nil
+
+class HalfFlop (input :: [ (Axiom, Axiom, Axiom) ]) (out :: [Axiom, Axiom]) | input -> out
+instance HalfFlop '[] '[]
+instance
+  ( HalfFlop rem prevOut
+  , Not cl cln't
+  , And st cln't lst
+  )
+  => HalfFlop ('(st, d, cl) ': rem) ('(lst, d) ': prevOut)
+
+class FlipFlop (input  :: [ (Axiom, Axiom, Axiom) ]) (out :: [Axiom])
+instance FlipFlop '[] '[]
+instance (
+        , FlipFlop rem prevOut
+        , HalfFlop ('(st, d, cl) ': rem) flops
+        , Not cl cln't
+        , And st cln't lst
+        , Latch flops
+        ) => FlipFlop ('(st, d, cl) ': rem )  (out ': prevOut)
 
 x :: Int
 x =

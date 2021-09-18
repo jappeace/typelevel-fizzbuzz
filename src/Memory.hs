@@ -48,7 +48,19 @@ latchSetTrueMem2 = nil
 latchSetTrueFalseMem :: Latch '[ '( F, T), '( T, F), '( F, F), '( T, T)] '[F, F, T , T] => b
 latchSetTrueFalseMem = nil
 
-class HalfFlop (input :: [ (Axiom, Axiom, Axiom) ]) (out :: [Axiom, Axiom]) | input -> out
+
+class Zip (ina :: [a]) (inb :: [b]) (out :: [(a,b)]) | ina inb -> out
+instance Zip '[] b '[]
+instance (
+    Zip nexta nextb rest
+         ) => Zip (ina ': nexta) (inb ': nextb) ('(ina, inb) ': rest)
+
+class Third (input :: [(a,b,c)]) (out :: [c]) | input -> out
+instance Third '[] '[]
+instance (Third rest out)
+          => Third ( '(_a, _b, c) ': rest) ( c ': out)
+
+class HalfFlop (input :: [ (Axiom, Axiom, Axiom) ]) (out :: [(Axiom, Axiom)]) | input -> out
 instance HalfFlop '[] '[]
 instance
   ( HalfFlop rem prevOut
@@ -60,12 +72,24 @@ instance
 class FlipFlop (input  :: [ (Axiom, Axiom, Axiom) ]) (out :: [Axiom])
 instance FlipFlop '[] '[]
 instance (
-        , FlipFlop rem prevOut
-        , HalfFlop ('(st, d, cl) ': rem) flops
-        , Not cl cln't
-        , And st cln't lst
-        , Latch flops
-        ) => FlipFlop ('(st, d, cl) ': rem )  (out ': prevOut)
+          HalfFlop input hflops
+        , Latch hflops ds
+        , Zip ds cls zipped
+        , Latch zipped out
+        , Third input cls
+        ) => FlipFlop input  out
+
+flipFlopNothingProof1 :: FlipFlop '[ '(F, F, F)] '[F] => b
+flipFlopNothingProof1 = nil
+
+flipFlopNothingProof2 :: FlipFlop '[ '(T, T, F)] '[F] => b
+flipFlopNothingProof2 = nil
+
+flipFlopNothingProof3 :: FlipFlop '[ '(T, T, T)] '[F] => b
+flipFlopNothingProof3 = nil
+
+flipFlopSetProof1 :: FlipFlop '[ '(F, F, F),  '(F, F, T), '(T, T, F)] '[ T, T, F] => b
+flipFlopSetProof1 = nil
 
 x :: Int
 x =
@@ -74,3 +98,7 @@ x =
    latchSetTrueMem
    latchSetTrueMem2
    latchSetTrueFalseMem
+   flipFlopNothingProof1
+   flipFlopNothingProof2
+   flipFlopNothingProof3
+   flipFlopSetProof1

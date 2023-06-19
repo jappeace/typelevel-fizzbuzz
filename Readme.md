@@ -4,3 +4,16 @@
 
 typelevel fizzbuzz.
 
+
+# Building
+
++ `nix-shell`
++ `cabal build`
+
+or
+
++ `nix-shell`
++ `ghci src/Processor.hs`
+
+
+there is some make file with additional commands.

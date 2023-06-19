@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b244f42134988477da1315af5fccd3e7bbf76684f69614371990ad62c78ff404
+-- hash: fc19f50eff976bb1217b711936a0e99c06ed7b288b544d8af2e21c5b8110a444
 
 name:           template
 version:        1.0.0
@@ -26,6 +26,12 @@ source-repository head
   location: https://github.com/jappeace/haskell-template-project
 
 library
+  exposed-modules:
+      Arithmetics
+      LogicGates
+      Memory
+      Plumbing
+      Processor
   other-modules:
       Paths_template
   hs-source-dirs:
